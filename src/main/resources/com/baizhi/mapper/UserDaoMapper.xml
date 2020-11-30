@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserDao">
+    <insert id="save" parameterType="User">
+        insert into yx_user
+        values (#{id},#{nick_name},#{phone},#{pic_img},#{brief},#{score},#{create_date},#{status})
+    </insert>
+    <select id="findAll" resultType="User">
+        select id,nick_name,phone,pic_img,brief,score,create_date,status from yx_user LIMIT #{start},#{rows}
+    </select>
+    <select id="findTotalCounts" resultType="long">
+        select count(id) from yx_user
+    </select>
+    <select id="findAlls" resultType="User">
+        select id,nick_name,phone,pic_img,brief,score,create_date,status from yx_user
+    </select>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.CategoryDao">
+    <select id="findone" resultType="Category">
+        select id,cate_name,levels,parent_id from yx_category where levels="1" LIMIT #{start},#{rows}
+    </select>
+    <select id="findTotalCounts" resultType="long">
+        select count(id) from yx_category
+    </select>
+    <select id="findtwo" resultType="Category">
+        select id,cate_name,levels,parent_id from yx_category where parent_id=#{id} LIMIT #{start},#{rows}
+    </select>
+    <select id="countss" resultType="long">
+        select count(id) from yx_category
+    </select>
+
+    <!-- 添加一级信息 -->
+    <insert id="saveone" parameterType="Category">
+        insert into yx_category values(#{id},#{cate_name},#{levels},#{parent_id})
+    </insert>
+    <!-- 添加二级信息 -->
+    <insert id="savetwo" parameterType="Category">
+        insert into yx_category values(#{id},#{cate_name},#{levels},#{parent_id})
+    </insert>
+    <!--修改一级-->
+    <update id="updateone" parameterType="Category">
+        update yx_category set id=#{id},cate_name=#{cate_name},levels=#{levels},parent_id=#{parent_id} where id=#{id}
+    </update>
+    <!--修改二级-->
+    <update id="updatetwo" parameterType="Category">
+        update yx_category set id=#{id},cate_name=#{cate_name},levels=#{levels},parent_id=#{parent_id} where id=#{id}
+    </update>
+    <!-- 删除一级 -->
+    <delete id="deleteone" parameterType="String">
+        delete from
+        yx_category
+        where
+        id=#{id}
+    </delete>
+    <!-- 删除二级 -->
+    <delete id="deletetwo" parameterType="String">
+        delete from
+        yx_category
+        where
+        id=#{id}
+    </delete>
+    <resultMap id="cate" type="com.baizhi.po.CategoryPO">
+        <id column="id" property="id"/>
+        <result column="cateName" property="cateName"/>
+        <result column="levels" property="levels"/>
+        <result column="parentId" property="parentId"/>
+        <collection property="categoryList" ofType="com.baizhi.po.CategoryPO">
+            <id column="cId" property="id"/>
+            <result column="cCateName" property="cateName"/>
+            <result column="cLevels" property="levels"/>
+            <result column="cParentId" property="parentId"/>
+        </collection>
+    </resultMap>
+    <select id="queryAllCategory" resultMap="cate">
+        select c.id,c.cate_name cateName,c.Levels,c.parent_id parentId,
+        c1.id cId,c1.cate_name cCateName,c1.levels cLevels,c1.parent_id cParentId
+        from yx_category c left join yx_category c1
+        on c.id=c1.parent_id
+        where c.levels=1
+    </select>
+
+
+</mapper>
